@@ -148,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 Intent intent = new Intent(MainActivity.this,LoginActivity.class);
                 startActivity(intent);
+                finish();
 
             } else {
 

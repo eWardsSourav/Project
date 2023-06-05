@@ -43,4 +43,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <TextView
+        android:id="@+id/registertv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Not registered?"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="10dp"
+        android:padding="10dp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:background="@color/purple_200"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
