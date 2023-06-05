@@ -22,7 +22,7 @@ public class SplashScreen extends AppCompatActivity {
         Thread thread = new Thread() {
             public void run() {
                 try {
-                    sleep(1500);
+                    sleep(200);
                     SharedPreferences prefs = getSharedPreferences("souravproject", MODE_PRIVATE);
 
                     if (prefs.contains("isLogin")) {
