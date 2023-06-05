@@ -146,8 +146,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             if (isDataSaved) {
                 Toast.makeText(MainActivity.this, "successfully registration", Toast.LENGTH_SHORT).show();
 
-//                Intent intent = new Intent(MainActivity.this,Mai.class);
-//                startActivity(intent);
+                Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                startActivity(intent);
 
             } else {
 
