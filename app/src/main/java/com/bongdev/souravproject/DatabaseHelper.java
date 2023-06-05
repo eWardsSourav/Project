@@ -2,6 +2,7 @@ package com.bongdev.souravproject;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -50,4 +51,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return rowId != -1;
 
     }
+
+    public boolean checkLogin(String email, String password) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] projection = {"email"};
+        String selection = "email = ? AND password = ?";
+        String[] selectionArgs = {email, password};
+
+        Cursor cursor = db.query("registration", projection, selection, selectionArgs, null, null, null);
+
+        boolean isLoginValid = cursor.moveToFirst();
+        cursor.close();
+
+        return isLoginValid;
+    }
+
+
 }
