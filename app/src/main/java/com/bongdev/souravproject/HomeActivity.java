@@ -2,8 +2,13 @@ package com.bongdev.souravproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
+import android.view.Window;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +20,7 @@ import java.util.List;
 public class HomeActivity extends AppCompatActivity {
 
     TextView firstname,lastname,dob,currentage,gender,skills,email,mob,password;
+    ImageView imageView;
     DatabaseHelper databaseHelper;
     UserDataModel userDataModel = new UserDataModel();
 
@@ -29,9 +35,10 @@ public class HomeActivity extends AppCompatActivity {
         currentage = findViewById(R.id.cage);
         gender = findViewById(R.id.gender);
         skills = findViewById(R.id.skills);
-        email = findViewById(R.id.skills);
+        email = findViewById(R.id.email);
         mob = findViewById(R.id.mobile);
         password = findViewById(R.id.password);
+        imageView = findViewById(R.id.imageView);
 
         databaseHelper = new DatabaseHelper(this);
 
@@ -70,6 +77,47 @@ public class HomeActivity extends AppCompatActivity {
         mob.setText(userDataModel.mobile);
         password.setText(userDataModel.password);
 
+        imageView.setOnClickListener(v -> {
+            PopUpLogOut();
+        });
 
+
+    }
+
+    private void PopUpLogOut() {
+        final Dialog dialog2 = new Dialog(this);
+        dialog2.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog2.setContentView(R.layout.popup_logout);
+        dialog2.setCancelable(false);
+        TextView dismiss = (TextView) dialog2.findViewById(R.id.popup_minimize);
+        TextView go = (TextView) dialog2.findViewById(R.id.popup_go_button);
+
+        dismiss.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog2.dismiss();
+            }
+        });
+        go.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog2.dismiss();
+                logOut();
+
+
+            }
+        });
+        dialog2.show();
+    }
+
+    private void logOut() {
+
+        SharedPreferences userData = getSharedPreferences("souravproject", MODE_PRIVATE);
+        SharedPreferences.Editor editor = userData.edit();
+        editor.clear();
+        editor.commit();
+        finish();
+        Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+        startActivity(intent);
     }
 }
