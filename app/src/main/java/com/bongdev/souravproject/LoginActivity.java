@@ -38,9 +38,13 @@ public class LoginActivity extends AppCompatActivity {
                 SharedPreferences userData = getSharedPreferences("souravproject",MODE_PRIVATE);
                 SharedPreferences.Editor editor = userData.edit();
                 editor.putBoolean("isLogin",true);
+                editor.putString("email",email.getText().toString());
+                editor.putString("password",password.getText().toString());
                 editor.commit();
 
                 Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
+                intent.putExtra("email",email.getText().toString());
+                intent.putExtra("password",password.getText().toString());
                 startActivity(intent);
 
             }

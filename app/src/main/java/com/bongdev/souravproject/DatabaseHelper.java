@@ -8,6 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "mydatabase.db";
@@ -66,6 +69,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return isLoginValid;
     }
+
+    public UserDataModel getuserData(String email, String password) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] projection = {"id","firstname", "lastname","dob","gender","skilles","email","mobile","password"};
+        String selection = "email = ? AND password = ?";
+        String[] selectionArgs = {email, password};
+
+        Cursor cursor = db.query("registration", projection, selection, selectionArgs, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            UserDataModel registrationModel = new UserDataModel();
+            registrationModel.id = cursor.getInt(0);
+            registrationModel.firstname = cursor.getString(1);
+            registrationModel.lastname = cursor.getString(2);
+            registrationModel.dob = cursor.getString(3);
+            registrationModel.gender = cursor.getString(4);
+            registrationModel.skilles = cursor.getString(5);
+            registrationModel.email = cursor.getString(6);
+            registrationModel.mobile = cursor.getString(7);
+            registrationModel.password = cursor.getString(8);
+
+            cursor.close();
+            return registrationModel;
+        } else {
+            cursor.close();
+            return null;
+        }
+    }
+
+
+
+
 
 
 }
