@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +22,7 @@ public class HomeActivity extends AppCompatActivity {
 
     TextView firstname,lastname,dob,currentage,gender,skills,email,mob,password;
     ImageView imageView;
+    Button btn;
     DatabaseHelper databaseHelper;
     UserDataModel userDataModel = new UserDataModel();
 
@@ -39,6 +41,7 @@ public class HomeActivity extends AppCompatActivity {
         mob = findViewById(R.id.mobile);
         password = findViewById(R.id.password);
         imageView = findViewById(R.id.imageView);
+        btn = findViewById(R.id.btn);
 
         databaseHelper = new DatabaseHelper(this);
 
@@ -79,6 +82,12 @@ public class HomeActivity extends AppCompatActivity {
 
         imageView.setOnClickListener(v -> {
             PopUpLogOut();
+        });
+
+        btn.setOnClickListener(v -> {
+            Intent intent = new Intent(this,MainActivity.class);
+            intent.putExtra("isFromHome",true);
+            startActivity(intent);
         });
 
 

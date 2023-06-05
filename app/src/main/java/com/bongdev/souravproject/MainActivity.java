@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.niwattep.materialslidedatepicker.SlideDatePickerDialog;
@@ -27,10 +29,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     EditText first_name,last_name,dob,email,mobile,password,confirm_pass;
     Spinner spinner;
+    TextView textView;
     Button button;
     CheckBox checkBoxFlutter,checkBoxKotlin,checkBoxJava,checkBoxAndroidSDK,checkBoxSwift,checkBoxGit,checkBoxNodeJs;
     String[] genderList = { "Male", "Female", "Transgender"};
     DatabaseHelper databaseHelper;
+    UserDataModel userDataModel = new UserDataModel();
     String GENDER = "";
     String skills = "";
 
@@ -42,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         first_name = findViewById(R.id.firstnametv);
         last_name = findViewById(R.id.lastnametv);
+        textView = findViewById(R.id.textView2);
         dob = findViewById(R.id.dob);
         email = findViewById(R.id.emailet);
         mobile = findViewById(R.id.mobet);
@@ -70,11 +75,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         String formattedDate = df.format(td);
 
 
+        if (getIntent().getBooleanExtra("isFromHome",false)){
+            setValue();
+        }
+
+
         dob.setOnClickListener(view -> {
             showDOBDatePicker("1919-01-01",formattedDate);
         });
 
         button.setOnClickListener(v -> {
+
+
             if (first_name.getText().toString().length()==0){
                 Toast.makeText(this, "Enter first name", Toast.LENGTH_SHORT).show();
                 return;
@@ -139,20 +151,42 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 return;
             }
 
-            boolean isDataSaved =   databaseHelper.addRegistration(first_name.getText().toString(),last_name.getText().toString(),dob.getText().toString(),GENDER,skills,email.getText().toString(),mobile.getText().toString(),password.getText().toString());
+            if (getIntent().getBooleanExtra("isFromHome",false)){
+                boolean isUpdate = databaseHelper.addUpdate(skills,email.getText().toString(),password.getText().toString(),dob.getText().toString());
+
+                if (isUpdate) {
+                    Toast.makeText(MainActivity.this, "successfully Update", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+
+                } else {
+
+                    Toast.makeText(MainActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+
+                }
 
 
 
-            if (isDataSaved) {
-                Toast.makeText(MainActivity.this, "successfully registration", Toast.LENGTH_SHORT).show();
+            }
 
-                Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-                startActivity(intent);
-                finish();
+            else {
 
-            } else {
+                boolean isDataSaved =   databaseHelper.addRegistration(first_name.getText().toString(),last_name.getText().toString(),dob.getText().toString(),GENDER,skills,email.getText().toString(),mobile.getText().toString(),password.getText().toString());
 
-                Toast.makeText(MainActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                if (isDataSaved) {
+                    Toast.makeText(MainActivity.this, "successfully registration", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+
+                } else {
+
+                    Toast.makeText(MainActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+
+                }
 
             }
 
@@ -161,7 +195,56 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
 
+
+
+
+
+
+
+
+
         });
+    }
+
+    private void setValue() {
+
+
+        SharedPreferences userData = getSharedPreferences("souravproject",MODE_PRIVATE);
+        userDataModel =   databaseHelper.getuserData(userData.getString("email",""),userData.getString("password",""));
+        button.setText("Update");
+        first_name.setText(userDataModel.firstname);
+        first_name.setEnabled(false);
+        last_name.setText(userDataModel.lastname);
+        last_name.setEnabled(false);
+        dob.setText(userDataModel.dob);
+
+        textView.setVisibility(View.INVISIBLE);
+
+        if (userDataModel.skilles.contains("Flutter")){
+            checkBoxFlutter.setChecked(true);
+        }if (userDataModel.skilles.contains("Kotlin")){
+            checkBoxKotlin.setChecked(true);
+        }if (userDataModel.skilles.contains("Java")){
+            checkBoxJava.setChecked(true);
+        }if (userDataModel.skilles.contains("Android SDK")){
+            checkBoxAndroidSDK.setChecked(true);
+        }if (userDataModel.skilles.contains("Swift")){
+            checkBoxSwift.setChecked(true);
+        }if (userDataModel.skilles.contains("GIT")){
+            checkBoxGit.setChecked(true);
+        }if (userDataModel.skilles.contains("NodeJs")){
+            checkBoxNodeJs.setChecked(true);
+        }
+        email.setText(userDataModel.email);
+        email.setEnabled(false);
+        mobile.setText(userDataModel.mobile);
+        mobile.setEnabled(false);
+        password.setText(userDataModel.password);
+        confirm_pass.setText(userDataModel.password);
+
+
+
+
     }
 
     @Override

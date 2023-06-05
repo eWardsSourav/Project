@@ -55,6 +55,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    public boolean addUpdate(String skilles, String email, String password,String dob ){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("password", password);
+        values.put("skilles",skilles);
+        values.put("dob",dob);
+
+        String selection = "email = ?";
+        String[] selectionArgs = { email };
+
+        int rowsAffected = db.update("registration", values, selection, selectionArgs);
+
+        return rowsAffected > 0;
+
+    }
+
     public boolean checkLogin(String email, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
 
